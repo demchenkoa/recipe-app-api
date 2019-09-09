@@ -120,5 +120,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# wrap standard django user model
+# wrap standard django user model -> http://bit.ly/2PWX5eM
 AUTH_USER_MODEL = 'core.User'

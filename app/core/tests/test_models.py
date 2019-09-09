@@ -21,3 +21,18 @@ class ModerTests(TestCase):
         user = get_user_model().objects.create_user(email, 'alex')
 
         self.assertEqual(user.email, email.lower())
+
+    def test_new_user_invalid_email(self):
+        """test user with no email will raise error"""
+        with self.assertRaises(ValueError):
+            get_user_model().objects.create_user(None, 'mypass')
+
+    def test_create_super_user(self):
+        """test creating new superuser"""
+        user = get_user_model().objects.create_superuser(
+            email='test@me.com'
+            'mypass'
+        )
+
+        self.assertTrue(user.is_superuser)
+        self.assertTrue(user.is_staff)
