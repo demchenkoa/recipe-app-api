@@ -12,7 +12,11 @@ create app
     docker-compose run app sh -c "python manage.py startapp core"
 
 run tests
-    docker-compose run app sh -c "python manage.py test && flake8"
+    docker-compose run --rm app sh -c "python manage.py test && flake8"
 
 make migrations
     docker-compose run app sh -c "python manage.py makemigrations core"
+
+
+email: alex@me.com
+pass: alex
