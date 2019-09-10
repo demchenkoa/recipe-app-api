@@ -18,5 +18,5 @@ make migrations
     docker-compose run app sh -c "python manage.py makemigrations core"
 
 
-email: c
-pass: alex
+email: alex@me.com
+pass: alex1
