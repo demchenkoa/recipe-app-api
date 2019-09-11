@@ -5,13 +5,22 @@ from core.models import Tag
 from recipe import serializers
 
 
-class TagViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
+class TagViewSet(viewsets.GenericViewSet,
+                 mixins.ListModelMixin,
+                 mixins.CreateModelMixin):
+
     """manage tags in database"""
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
-    queryset = Tag.objects.all()
+    # queryset = Tag.objects.all()
     serializer_class = serializers.TagSerializer
 
     def get_queryset(self):
         """filter tags for authenticated user only"""
-        return self.queryset.filter(user=self.request.user).order_by('-name')
+        return Tag.objects.filter(user=self.request.user).order_by('-name')
+        # this variant is bad. because we will filter result in application, not db
+        # return self.queryset.filter(user=self.request.user).order_by('-name')
+
+    def perform_create(self, serializer):
+        """create tag and associate with authenticated user """
+        serializer.save(user=self.request.user)
