@@ -28,9 +28,6 @@ class TagViewSet(BaseRecipeAttrViewSet,
     def get_queryset(self):
         """filter tags for authenticated user only"""
         return Tag.objects.filter(user=self.request.user).order_by('-name')
-        # this variant is bad. because we will filter result
-        # in application, not db
-        # return self.queryset.filter(user=self.request.user).order_by('-name')
 
     def perform_destroy(self, instance):
         instance.delete()
