@@ -131,8 +131,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = '/var/web/media'
-STATIC_ROOT = '/var/web/static'
+MEDIA_ROOT = '/vol/web/media'
+STATIC_ROOT = '/vol/web/static'
 
 # wrap standard django user model -> http://bit.ly/2PWX5eM
 AUTH_USER_MODEL = 'core.User'
