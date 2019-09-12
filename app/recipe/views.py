@@ -13,31 +13,10 @@ class BaseRecipeAttrViewSet(viewsets.GenericViewSet,
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+    model_name = None
 
     def get_queryset(self):
-        assigned_only = bool(
-            int(self.request.query_params.get('assigned_only', 0))
-        )
-        queryset = self.queryset
-        if assigned_only:
-            queryset = queryset.filter(recipe__isnull=False)
-
-        return queryset.filter(user=self.request.user).order_by('-name').distinct()
-
-    def perform_create(self, serializer):
-        """create object and associate with authenticated user """
-        serializer.save(user=self.request.user)
-
-
-class TagViewSet(BaseRecipeAttrViewSet,
-                 mixins.DestroyModelMixin):
-
-    serializer_class = serializers.TagSerializer
-
-    def get_queryset(self):
-        """filter tags for authenticated user only"""
-
-        queryset = Tag.objects.filter(user=self.request.user).order_by('-name')
+        queryset = self.model_name.objects.filter(user=self.request.user).order_by('-name')
 
         assigned_only = bool(
             int(self.request.query_params.get('assigned_only', 0))
@@ -48,17 +27,25 @@ class TagViewSet(BaseRecipeAttrViewSet,
 
         return queryset.distinct()
 
+    def perform_create(self, serializer):
+        """create object and associate with authenticated user """
+        serializer.save(user=self.request.user)
+
+
+class TagViewSet(BaseRecipeAttrViewSet,
+                 mixins.DestroyModelMixin):
+
+    serializer_class = serializers.TagSerializer
+    model_name = Tag
+
     def perform_destroy(self, instance):
         instance.delete()
 
 
 class IngredientViewSet(BaseRecipeAttrViewSet):
 
-    queryset = Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    model_name = Ingredient
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
