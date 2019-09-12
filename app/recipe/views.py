@@ -13,10 +13,9 @@ class BaseRecipeAttrViewSet(viewsets.GenericViewSet,
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    model_name = None
 
     def get_queryset(self):
-        queryset = self.model_name.objects.filter(user=self.request.user).order_by('-name')
+        queryset = self.queryset.filter(user=self.request.user).order_by('-name')
 
         assigned_only = bool(
             int(self.request.query_params.get('assigned_only', 0))
@@ -36,7 +35,7 @@ class TagViewSet(BaseRecipeAttrViewSet,
                  mixins.DestroyModelMixin):
 
     serializer_class = serializers.TagSerializer
-    model_name = Tag
+    queryset = Tag.objects.all()
 
     def perform_destroy(self, instance):
         instance.delete()
@@ -45,7 +44,7 @@ class TagViewSet(BaseRecipeAttrViewSet,
 class IngredientViewSet(BaseRecipeAttrViewSet):
 
     serializer_class = serializers.IngredientSerializer
-    model_name = Ingredient
+    queryset = Ingredient.objects.all()
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
