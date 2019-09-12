@@ -15,7 +15,14 @@ class BaseRecipeAttrViewSet(viewsets.GenericViewSet,
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).order_by('-name')
+        assigned_only = bool(
+            int(self.request.query_params.get('assigned_only', 0))
+        )
+        queryset = self.queryset
+        if assigned_only:
+            queryset = queryset.filter(recipe__isnull=False)
+
+        return queryset.filter(user=self.request.user).order_by('-name').distinct()
 
     def perform_create(self, serializer):
         """create object and associate with authenticated user """
@@ -29,7 +36,17 @@ class TagViewSet(BaseRecipeAttrViewSet,
 
     def get_queryset(self):
         """filter tags for authenticated user only"""
-        return Tag.objects.filter(user=self.request.user).order_by('-name')
+
+        queryset = Tag.objects.filter(user=self.request.user).order_by('-name')
+
+        assigned_only = bool(
+            int(self.request.query_params.get('assigned_only', 0))
+        )
+
+        if assigned_only:
+            queryset = queryset.filter(recipe__isnull=False)
+
+        return queryset.distinct()
 
     def perform_destroy(self, instance):
         instance.delete()
