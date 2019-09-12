@@ -129,6 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = '/var/web/media'
+STATIC_ROOT = '/var/web/static'
 
 # wrap standard django user model -> http://bit.ly/2PWX5eM
 AUTH_USER_MODEL = 'core.User'
